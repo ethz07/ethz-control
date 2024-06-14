@@ -1,0 +1,113 @@
+local hostUserId = 1596382068 -- Userid
+local fpsCap = 5 -- FpsCap for Alts
+local prefix = '!' -- Your Prefix
+
+local altAccounts = { -- 38 Alts max. User IDs of the alt accounts
+    5590716577,
+    5590724729,
+    5590729811,
+    -- Add more alt account IDs here if needed
+}
+
+local locations = {
+    bank = {
+        Vector3.new(-386.3853454589844, 21.24999237060547, -338.0519104003906), -- 1. Alt Hesap
+        Vector3.new(-374.25830078125, 21.24999237060547, -338.2541198730469), -- 2. Alt Hesap
+        Vector3.new(-361.12103271484375, 21.24999237060547, -338.4696960449219), -- 3. Alt Hesap
+    },
+    club = Vector3.new(0, 0, 0), 
+    basketball = Vector3.new(0, 0, 0),
+    school = Vector3.new(0, 0, 0)
+}
+
+local isDropping = false
+
+local function teleportAltsToLocation(location)
+    for i, altId in ipairs(altAccounts) do
+        local altPlayer = game.Players:GetPlayerByUserId(altId)
+        if altPlayer and altPlayer.Character and altPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            if type(location) == "table" and location[i] then
+                altPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(location[i])
+            else
+                altPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(location)
+            end
+        end
+    end
+end
+
+local function bringAltsToOwner()
+    local ownerPlayer = game.Players:GetPlayerByUserId(hostUserId)
+    if ownerPlayer and ownerPlayer.Character and ownerPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        local ownerPosition = ownerPlayer.Character.HumanoidRootPart.Position
+        teleportAltsToLocation(ownerPosition)
+    end
+end
+
+local function startDroppingCash()
+    isDropping = true
+    while isDropping do
+        for _, altId in ipairs(altAccounts) do
+            local altPlayer = game.Players:GetPlayerByUserId(altId)
+            if altPlayer then
+                game.ReplicatedStorage.MainEvent:FireServer('DropMoney', '10000')
+                task.wait(0.5)
+            end
+        end
+    end
+end
+
+local function stopDroppingCash()
+    isDropping = false
+end
+
+local function onChatMessage(player, message)
+    if message:sub(1, #prefix) == prefix then
+        local command = message:sub(#prefix + 1)
+        if command == "setup bank" then
+            teleportAltsToLocation(locations.bank)
+        elseif command == "setup club" then
+            teleportAltsToLocation(locations.club)
+        elseif command == "setup basketball" then
+            teleportAltsToLocation(locations.basketball)
+        elseif command == "setup school" then
+            teleportAltsToLocation(locations.school)
+        elseif command == "bring" then
+            bringAltsToOwner()
+        elseif command == "drop" then
+            startDroppingCash()
+        elseif command == "stop" then
+            stopDroppingCash()
+        end
+    end
+end
+
+game.Players.PlayerAdded:Connect(function(player)
+    player.Chatted:Connect(function(message)
+        onChatMessage(player, message)
+    end)
+end)
+
+game.Players.LocalPlayer.Chatted:Connect(function(message)
+    onChatMessage(game.Players.LocalPlayer, message)
+end)
+
+local function showWalletInfo()
+    local playerGui = game.Players.LocalPlayer:FindFirstChildOfClass("PlayerGui")
+    local screenGui = Instance.new("ScreenGui")
+    local frame = Instance.new("Frame")
+    local textLabel = Instance.new("TextLabel")
+
+    screenGui.Parent = playerGui
+    frame.Parent = screenGui
+    frame.BackgroundColor3 = Color3.new(0, 0, 0)
+    frame.Size = UDim2.new(1, 0, 1, 0)
+
+    textLabel.Parent = frame
+    textLabel.TextColor3 = Color3.new(1, 1, 1)
+    textLabel.Size = UDim2.new(1, 0, 1, 0)
+    textLabel.Font = Enum.Font.SourceSansSemibold
+    textLabel.TextSize = 50
+    textLabel.Text = "User: " .. game.Players.LocalPlayer.Name .. "\nWallet: 1000"
+end
+
+showWalletInfo()
