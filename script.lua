@@ -137,34 +137,16 @@ end
 local function unWallet()
     for _, altId in ipairs(altAccounts) do
         local altPlayer = game.Players:GetPlayerByUserId(altId)
-        if altPlayer then
-            local backpack = altPlayer.Backpack
-            if backpack then
-                local walletItem = backpack:FindFirstChild("Wallet")
-                if walletItem then
-                    walletItem:Destroy()
-                    game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Wallet destroyed in Backpack.", "All")
-                else
-                    game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Wallet not found in Backpack.", "All")
-                end
+        if altPlayer and altPlayer.Character then
+            local humanoid = altPlayer.Character:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid:UnequipTools()
+                game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Wallet unequipped.", "All")
             else
-                game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Backpack not found.", "All")
-            end
-            
-            local character = altPlayer.Character
-            if character then
-                local walletTool = character:FindFirstChild("Wallet")
-                if walletTool then
-                    walletTool:Destroy()
-                    game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Wallet destroyed in Character.", "All")
-                else
-                    game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Wallet not found in Character.", "All")
-                end
-            else
-                game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Character not found.", "All")
+                game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Humanoid not found.", "All")
             end
         else
-            game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Alt player not found.", "All")
+            game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Alt player or character not found.", "All")
         end
     end
 end
