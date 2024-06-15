@@ -1,3 +1,13 @@
+local hostUserId = getgenv().Host or 1596382068 -- Userid
+local fpsCap = getgenv().Fps or 5 -- FpsCap for Alts
+local prefix = getgenv().Prefix or '!' -- Example Prefix "!" "?" "/" "."
+
+local altAccounts = getgenv().Alts or { -- 38 Alts max.
+    5590716577,
+    5590724729,
+    5590729811,
+}
+
 -- Lokasyonlar
 local locations = {
     bank = {
