@@ -143,8 +143,28 @@ local function unWallet()
                 local walletItem = backpack:FindFirstChild("Wallet")
                 if walletItem then
                     walletItem:Destroy()
+                    game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Wallet destroyed in Backpack.", "All")
+                else
+                    game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Wallet not found in Backpack.", "All")
                 end
+            else
+                game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Backpack not found.", "All")
             end
+            
+            local character = altPlayer.Character
+            if character then
+                local walletTool = character:FindFirstChild("Wallet")
+                if walletTool then
+                    walletTool:Destroy()
+                    game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Wallet destroyed in Character.", "All")
+                else
+                    game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Wallet not found in Character.", "All")
+                end
+            else
+                game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Character not found.", "All")
+            end
+        else
+            game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Alt player not found.", "All")
         end
     end
 end
