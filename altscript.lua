@@ -111,26 +111,16 @@ end
 local function showWallets()
     for _, altId in ipairs(altAccounts) do
         local altPlayer = game.Players:GetPlayerByUserId(altId)
-        if altPlayer then
-            local walletAmount = getWalletAmount(altPlayer) -- Bu fonksiyonu aşağıda tanımlayacağız
-            if walletAmount then
-                game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Wallet: " .. walletAmount, "All")
+        if altPlayer and altPlayer.Backpack then
+            local walletItem = altPlayer.Backpack:FindFirstChild("Wallet")
+            if walletItem then
+                altPlayer.Character:FindFirstChildOfClass("Humanoid"):EquipTool(walletItem)
+                game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Wallet equipped.", "All")
             else
-                game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Wallet: Unknown", "All")
+                game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Wallet not found in Backpack.", "All")
             end
         end
     end
-end
-
-local function getWalletAmount(player)
-    -- Bu fonksiyon envanterdeki cüzdan miktarını bulur ve döner
-    -- Burada cüzdan iteminin envanterde nasıl saklandığına dair spesifik kod olmalı
-    -- Örneğin:
-    local walletItem = player.Backpack:FindFirstChild("Wallet") or player.Character:FindFirstChild("Wallet")
-    if walletItem then
-        return walletItem.Amount.Value -- Amount değeri cüzdan iteminin içinde olmalı
-    end
-    return nil
 end
 
 local function onChatMessage(player, message)
