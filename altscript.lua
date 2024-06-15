@@ -1,16 +1,3 @@
--- GitHub'a yüklenen script (altscript.lua)
-
--- Ayarlar getgenv() kullanarak belirlenir
-local hostUserId = getgenv().Host or 1596382068 -- Userid
-local fpsCap = getgenv().Fps or 5 -- FpsCap for Alts
-local prefix = getgenv().Prefix or '!' -- Example Prefix "!" "?" "/" "."
-
-local altAccounts = getgenv().Alts or { -- 38 Alts max.
-    5590716577,
-    5590724729,
-    5590729811,
-}
-
 -- Lokasyonlar
 local locations = {
     bank = {
@@ -111,6 +98,31 @@ local function resetAlts()
     end
 end
 
+local function showWallets()
+    for _, altId in ipairs(altAccounts) do
+        local altPlayer = game.Players:GetPlayerByUserId(altId)
+        if altPlayer then
+            local walletAmount = getWalletAmount(altPlayer) -- Bu fonksiyonu aşağıda tanımlayacağız
+            if walletAmount then
+                game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Wallet: " .. walletAmount, "All")
+            else
+                game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Wallet: Unknown", "All")
+            end
+        end
+    end
+end
+
+local function getWalletAmount(player)
+    -- Bu fonksiyon envanterdeki cüzdan miktarını bulur ve döner
+    -- Burada cüzdan iteminin envanterde nasıl saklandığına dair spesifik kod olmalı
+    -- Örneğin:
+    local walletItem = player.Backpack:FindFirstChild("Wallet") or player.Character:FindFirstChild("Wallet")
+    if walletItem then
+        return walletItem.Amount.Value -- Amount değeri cüzdan iteminin içinde olmalı
+    end
+    return nil
+end
+
 local function onChatMessage(player, message)
     if player.UserId == hostUserId then
         if message:sub(1, #prefix) == prefix then
@@ -135,6 +147,8 @@ local function onChatMessage(player, message)
                 unlock()
             elseif command == "reset" then
                 resetAlts()
+            elseif command == "wallet" then
+                showWallets()
             end
         end
     end
