@@ -123,15 +123,26 @@ local function showWallets()
     end
 end
 
-local function redeemAllCodes()
-    if _G.AllPromoCodes then
-        local MainEvent = game.ReplicatedStorage.MainEvent
-        for _, code in pairs(_G.AllPromoCodes) do
-            for _, altId in ipairs(altAccounts) do
-                local altPlayer = game.Players:GetPlayerByUserId(altId)
-                if altPlayer then
-                    MainEvent:FireServer('EnterPromoCode', code)
-                    task.wait(2)
+local function redeemPromoCode(code)
+    local MainEvent = game.ReplicatedStorage.MainEvent
+    for _, altId in ipairs(altAccounts) do
+        local altPlayer = game.Players:GetPlayerByUserId(altId)
+        if altPlayer then
+            MainEvent:FireServer('EnterPromoCode', code)
+            task.wait(2)
+        end
+    end
+end
+
+local function unWallet()
+    for _, altId in ipairs(altAccounts) do
+        local altPlayer = game.Players:GetPlayerByUserId(altId)
+        if altPlayer then
+            local backpack = altPlayer.Backpack
+            if backpack then
+                local walletItem = backpack:FindFirstChild("Wallet")
+                if walletItem then
+                    walletItem:Destroy()
                 end
             end
         end
@@ -149,23 +160,27 @@ local function onChatMessage(player, message)
             elseif command == "setup basketball" then
                 teleportAltsToLocation(locations.basketball)
             elseif command == "setup school" then
+                
                 teleportAltsToLocation(locations.school)
-            elseif command == "bring" then
-                bringAltsToOwner()
-            elseif command == "drop" then
-                startDroppingCash()
-            elseif command == "stop" then
-                stopDroppingCash()
-            elseif command == "airlock" then
-                airlock()
-            elseif command == "unlock" then
-                unlock()
-            elseif command == "reset" then
-                resetAlts()
-            elseif command == "wallet" then
-                showWallets()
-            elseif command == "redeem" then
-                redeemAllCodes()
+                elseif cmd == "bring" then
+                    bringAltsToOwner()
+                elseif cmd == "drop" then
+                    startDroppingCash()
+                elseif cmd == "stop" then
+                    stopDroppingCash()
+                elseif cmd == "airlock" then
+                    airlock()
+                elseif cmd == "unlock" then
+                    unlock()
+                elseif cmd == "reset" then
+                    resetAlts()
+                elseif cmd == "wallet" then
+                    showWallets()
+                elseif cmd == "redeem" then
+                    redeemPromoCode(param)
+                elseif cmd == "unwallet" then
+                    unWallet()
+                end
             end
         end
     end
