@@ -168,7 +168,7 @@ local function onChatMessage(player, message)
             elseif command == "wallet" then
                 showWallets()
             elseif command:sub(1, 7) == "redeem " then
-                local code = command:sub(8)
+                local code = message:sub(8)
                 redeemCode(code)
             end
         end
