@@ -170,7 +170,6 @@ local function onChatMessage(player, message)
         end
     end
 end
-end
 
 local function setupChatListeners(player)
     player.Chatted:Connect(function(message)
