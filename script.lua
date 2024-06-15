@@ -160,27 +160,25 @@ local function onChatMessage(player, message)
             elseif command == "setup basketball" then
                 teleportAltsToLocation(locations.basketball)
             elseif command == "setup school" then
-                
                 teleportAltsToLocation(locations.school)
-                elseif cmd == "bring" then
-                    bringAltsToOwner()
-                elseif cmd == "drop" then
-                    startDroppingCash()
-                elseif cmd == "stop" then
-                    stopDroppingCash()
-                elseif cmd == "airlock" then
-                    airlock()
-                elseif cmd == "unlock" then
-                    unlock()
-                elseif cmd == "reset" then
-                    resetAlts()
-                elseif cmd == "wallet" then
-                    showWallets()
-                elseif cmd == "redeem" then
-                    redeemPromoCode(param)
-                elseif cmd == "unwallet" then
-                    unWallet()
-                end
+            elseif command == "bring" then
+                bringAltsToOwner()
+            elseif command == "drop" then
+                startDroppingCash()
+            elseif command == "stop" then
+                stopDroppingCash()
+            elseif command == "airlock" then
+                airlock()
+            elseif command == "unlock" then
+                unlock()
+            elseif command == "reset" then
+                resetAlts()
+            elseif command == "wallet" then
+                showWallets()
+            elseif command == "redeem" then
+                redeemPromoCode(code)
+            elseif command == "unwallet" then
+                unWallet()
             end
         end
     end
