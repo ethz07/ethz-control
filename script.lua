@@ -142,6 +142,7 @@ local function unWallet()
             if backpack then
                 local walletItem = backpack:FindFirstChild("Wallet")
                 if walletItem then
+                    walletItem.Parent = nil
                     walletItem:Destroy()
                 end
             end
