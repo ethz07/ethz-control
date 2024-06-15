@@ -123,6 +123,16 @@ local function showWallets()
     end
 end
 
+local function redeemCode(code)
+    for _, altId in ipairs(altAccounts) do
+        local altPlayer = game.Players:GetPlayerByUserId(altId)
+        if altPlayer then
+            game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Redeeming code: " .. code, "All")
+            -- Burada kodun kullanılacağı işlemler yapılabilir
+        end
+    end
+end
+
 local function onChatMessage(player, message)
     if player.UserId == hostUserId then
         if message:sub(1, #prefix) == prefix then
@@ -149,6 +159,9 @@ local function onChatMessage(player, message)
                 resetAlts()
             elseif command == "wallet" then
                 showWallets()
+            elseif command:sub(1, 7) == "redeem " then
+                local code = command:sub(8)
+                redeemCode(code)
             end
         end
     end
@@ -169,3 +182,4 @@ for _, player in ipairs(game.Players:GetPlayers()) do
 end
 
 print("Script loaded successfully.")
+``
