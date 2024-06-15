@@ -1,8 +1,8 @@
-local hostUserId = getgenv().Host or 1596382068 -- Userid
+local hostUserId = getgenv().Host or 1596382068 -- Host Userid
 local fpsCap = getgenv().Fps or 5 -- FpsCap for Alts
 local prefix = getgenv().Prefix or '!' -- Example Prefix "!" "?" "/" "."
 
-local altAccounts = getgenv().Alts or { -- 38 Alts max.
+local altAccounts = getgenv().Alts or { -- alt ids here
     5590716577,
     5590724729,
     5590729811,
