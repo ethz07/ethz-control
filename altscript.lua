@@ -182,4 +182,3 @@ for _, player in ipairs(game.Players:GetPlayers()) do
 end
 
 print("Script loaded successfully.")
-``
