@@ -8,7 +8,6 @@ local altAccounts = getgenv().Alts or { -- 38 Alts max.
     5590729811,
 }
 
--- Lokasyonlar
 local locations = {
     bank = {
         Vector3.new(-386.3853454589844, 21.24999237060547, -338.0519104003906), -- 1. Alt Hesap
