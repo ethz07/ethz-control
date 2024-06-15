@@ -127,8 +127,16 @@ local function redeemCode(code)
     for _, altId in ipairs(altAccounts) do
         local altPlayer = game.Players:GetPlayerByUserId(altId)
         if altPlayer then
-            game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Redeeming code: " .. code, "All")
-            -- Burada kodun kullanılacağı işlemler yapılabilir
+            -- Kodu kullanmak için örneğin:
+            -- Örnek bir kod işlemi:
+            -- altPlayer:Kick("Redeemed code: " .. code)
+            -- veya
+            -- Altın envanterine bir ödül eklemek için:
+            -- local reward = Instance.new("Part")
+            -- reward.Name = "Reward"
+            -- reward.Parent = altPlayer.Backpack
+            -- game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Redeemed code: " .. code, "All")
+            game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Redeemed code: " .. code, "All")
         end
     end
 end
