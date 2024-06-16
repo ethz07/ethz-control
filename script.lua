@@ -151,8 +151,14 @@ local function unWallet()
 end
 
 local function attackAndCarry(targetPlayer)
+    print("attackAndCarry function started.")
+    
     local altPlayer = game.Players:GetPlayerByUserId(altAccounts[1]) -- İlk alternatif hesabı kullan
     if altPlayer and altPlayer.Character and altPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        print("Alt player and character found.")
+        
+        local isAttacking = true -- Saldırıyı devam ettirmek için bir bayrak
+        
         -- Hedefin önüne doğru bir vuruş yapmak için hedefin pozisyonunu ve yönünü hesaplayın
         local targetPosition = targetPlayer.Character.HumanoidRootPart.Position
         local direction = (targetPosition - altPlayer.Character.HumanoidRootPart.Position).unit
@@ -164,21 +170,24 @@ local function attackAndCarry(targetPlayer)
         -- Combat aracını bul
         local tool = altPlayer.Backpack:FindFirstChild("Combat")
         if tool then
+            print("Combat tool found.")
+            
             altPlayer.Character:FindFirstChildOfClass("Humanoid"):EquipTool(tool)
             -- Saldırıyı takip et
-            local attacking = true
-            while attacking and targetPlayer.Character.Humanoid.Health > 0 do
-                -- Can 14'ten küçükse vurmayı durdur
-                if targetPlayer.Character.Humanoid.Health < 14 then
-                    attacking = false
-                    break
+            while targetPlayer.Character.Humanoid.Health > 0 and isAttacking do
+                print("Attacking...")
+                -- Can 5'ten küçükse vurmayı durdur
+                if targetPlayer.Character.Humanoid.Health < 5 then
+                    print("Target health is less than 5. Stopping attack.")
+                    isAttacking = false -- Saldırıyı durdur
                 end
                 tool:Activate()
                 task.wait(0.2) -- Gerekirse bekleme süresini ayarlayın
             end
             
-            -- Hedefin canı 14'ten düşükse
-            if not attacking and targetPlayer.Character.Humanoid.Health < 14 then
+            -- Hedefin canı 5'ten düşükse ve saldırı devam ediyorsa
+            if targetPlayer.Character.Humanoid.Health < 5 and isAttacking then
+                print("Target health is less than 5. Carrying...")
                 -- Hedefe ışınlan ve taşı
                 altPlayer.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 0, 2)
                 game.ReplicatedStorage.MainEvent:FireServer('Carry', targetPlayer)
@@ -186,14 +195,20 @@ local function attackAndCarry(targetPlayer)
                 -- Hosta ışınlan ve hedefi bırak
                 local ownerPlayer = game.Players:GetPlayerByUserId(hostUserId)
                 if ownerPlayer and ownerPlayer.Character and ownerPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                    print("Dropping target...")
                     altPlayer.Character.HumanoidRootPart.CFrame = ownerPlayer.Character.HumanoidRootPart.CFrame
                     game.ReplicatedStorage.MainEvent:FireServer('Drop', targetPlayer)
                 end
             end
         else
+            print("Combat tool not found.")
             game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Combat tool not found.", "All")
         end
+    else
+        print("Alt player or character not found.")
     end
+    
+    print("attackAndCarry function ended.")
 end
 
 local function onChatMessage(player, message)
