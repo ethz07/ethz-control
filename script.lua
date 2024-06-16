@@ -172,7 +172,9 @@ local function attackAndCarry(targetPlayer)
         if tool then
             print("Combat tool found.")
             
+            -- Combat aracını equip yap
             altPlayer.Character:FindFirstChildOfClass("Humanoid"):EquipTool(tool)
+            
             -- Saldırıyı takip et
             while targetPlayer.Character.Humanoid.Health > 0 and isAttacking do
                 print("Attacking...")
@@ -184,6 +186,12 @@ local function attackAndCarry(targetPlayer)
                         altPlayer.Character:FindFirstChildOfClass("Humanoid"):UnequipTools()
                     end
                 else
+                    -- Hedefin pozisyonunu güncelle ve isinlan
+                    targetPosition = targetPlayer.Character.HumanoidRootPart.Position
+                    direction = (targetPosition - altPlayer.Character.HumanoidRootPart.Position).unit
+                    hitPoint = targetPosition - direction * 2 -- Hedefin önüne 2 birim ötelenmiş bir nokta
+                    altPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(hitPoint)
+                    
                     tool:Activate()
                     task.wait(0.2) -- Gerekirse bekleme süresini ayarlayın
                 end
@@ -213,7 +221,7 @@ local function attackAndCarry(targetPlayer)
     end
     
     print("attackAndCarry function ended.")
-end 
+end
 
 local function onChatMessage(player, message)
     if player.UserId == hostUserId then
