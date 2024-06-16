@@ -151,7 +151,6 @@ local function unWallet()
 end
 
 local function attackAndCarry(targetPlayer)
-local function attackAndCarry(targetPlayer)
     local altPlayer = game.Players:GetPlayerByUserId(altAccounts[1]) -- İlk alternatif hesabı kullan
     if altPlayer and altPlayer.Character and altPlayer.Character:FindFirstChild("HumanoidRootPart") then
         -- Hedefin önüne doğru bir vuruş yapmak için hedefin pozisyonunu ve yönünü hesaplayın
@@ -193,7 +192,7 @@ local function attackAndCarry(targetPlayer)
             game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Combat tool not found.", "All")
         end
     end
-    end
+end
 
 local function onChatMessage(player, message)
     if player.UserId == hostUserId then
