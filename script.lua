@@ -152,21 +152,23 @@ end
 
 local function carryTarget(targetPlayer)
     print("carryTarget function started.")
-    local altPlayer = game.Players:GetPlayerByUserId(altAccounts[1]) -- İlk alternatif hesabı kullan
+    
+    local altPlayer = game.Players:GetPlayerByUserId(altAccounts[1])
     if altPlayer and altPlayer.Character and altPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        print("Carrying target.")
-        altPlayer.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 2, 0)
+        -- Hedefin tam üzerine ışınlan
+        altPlayer.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 2, 0) -- Karakterin tam üzerine ışınlanacak
         game.ReplicatedStorage.MainEvent:FireServer('Carry', targetPlayer)
         task.wait(3) -- 3 saniye bekle
+        -- Hosta ışınlan ve hedefi bırak
         local ownerPlayer = game.Players:GetPlayerByUserId(hostUserId)
         if ownerPlayer and ownerPlayer.Character and ownerPlayer.Character:FindFirstChild("HumanoidRootPart") then
-            print("Dropping target.")
-            altPlayer.Character.HumanoidRootPart.CFrame = ownerPlayer.Character.HumanoidRootPart.CFrame
+            altPlayer.Character.HumanoidRootPart.CFrame = ownerPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 2, 0)
             game.ReplicatedStorage.MainEvent:FireServer('Drop', targetPlayer)
         end
     else
         print("Alt player or character not found.")
     end
+    
     print("carryTarget function ended.")
 end
 
