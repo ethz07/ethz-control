@@ -151,24 +151,35 @@ local function unWallet()
 end
 
 local function attackAndCarry(targetPlayer)
+local function attackAndCarry(targetPlayer)
     local altPlayer = game.Players:GetPlayerByUserId(altAccounts[1]) -- İlk alternatif hesabı kullan
     if altPlayer and altPlayer.Character and altPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        altPlayer.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 0, 5)
-        
+        -- Hedefin önüne doğru bir vuruş yapmak için hedefin pozisyonunu ve yönünü hesaplayın
+        local targetPosition = targetPlayer.Character.HumanoidRootPart.Position
+        local direction = (targetPosition - altPlayer.Character.HumanoidRootPart.Position).unit
+        local hitPoint = targetPosition - direction * 2 -- Hedefin önüne 2 birim ötelenmiş bir nokta
+
+        -- Vuruş pozisyonunu ayarla
+        altPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(hitPoint)
+
         -- Combat aracını bul
         local tool = altPlayer.Backpack:FindFirstChild("Combat")
         if tool then
             altPlayer.Character:FindFirstChildOfClass("Humanoid"):EquipTool(tool)
             -- Saldırıyı takip et
             while targetPlayer.Character.Humanoid.Health > 0 do
+                -- Can 14'ten küçükse vurmayı durdur
+                if targetPlayer.Character.Humanoid.Health < 14 then
+                    break
+                end
                 tool:Activate()
                 task.wait(0.2) -- Gerekirse bekleme süresini ayarlayın
             end
             
-            -- Canı 14'ten küçükse
+            -- Hedefin canı 14'ten düşükse
             if targetPlayer.Character.Humanoid.Health < 14 then
                 -- Hedefe ışınlan ve taşı
-                altPlayer.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 0, 5)
+                altPlayer.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 0, 2)
                 game.ReplicatedStorage.MainEvent:FireServer('Carry', targetPlayer)
                 task.wait(1)
                 -- Hosta ışınlan ve hedefi bırak
@@ -182,7 +193,7 @@ local function attackAndCarry(targetPlayer)
             game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Combat tool not found.", "All")
         end
     end
-end
+    end
 
 local function onChatMessage(player, message)
     if player.UserId == hostUserId then
