@@ -153,20 +153,30 @@ end
 local function carryTarget(targetPlayer)
     print("carryTarget function started.")
     
+    local ownerPlayer = game.Players:GetPlayerByUserId(hostUserId)
     local altPlayer = game.Players:GetPlayerByUserId(altAccounts[1])
-    if altPlayer and altPlayer.Character and altPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        -- Hedefin tam üzerine ışınlan
-        altPlayer.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 2, 0) -- Karakterin tam üzerine ışınlanacak
-        game.ReplicatedStorage.MainEvent:FireServer('Carry', targetPlayer)
-        task.wait(3) -- 3 saniye bekle
-        -- Hosta ışınlan ve hedefi bırak
-        local ownerPlayer = game.Players:GetPlayerByUserId(hostUserId)
-        if ownerPlayer and ownerPlayer.Character and ownerPlayer.Character:FindFirstChild("HumanoidRootPart") then
-            altPlayer.Character.HumanoidRootPart.CFrame = ownerPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 2, 0)
-            game.ReplicatedStorage.MainEvent:FireServer('Drop', targetPlayer)
-        end
+    
+    if altPlayer and targetPlayer and ownerPlayer and altPlayer.Character and targetPlayer.Character and ownerPlayer.Character then
+        print("Alt player and target player found.")
+        
+        -- Hedef oyuncuya ışınlanma
+        altPlayer.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame
+        
+        -- Taşıma işlemini başlatma
+        wait(1)
+        game.ReplicatedStorage.MainEvent:FireServer("Carry", targetPlayer.Character)
+        print("Firing Carry event.")
+        
+        -- Taşıma süresi (3 saniye)
+        wait(3)
+        
+        -- Host oyuncusuna ışınlanma
+        altPlayer.Character.HumanoidRootPart.CFrame = ownerPlayer.Character.HumanoidRootPart.CFrame
+        game.ReplicatedStorage.MainEvent:FireServer("Drop", targetPlayer.Character)
+        print("Dropping target player.")
     else
-        print("Alt player or character not found.")
+        print("Player(s) not found or not valid.")
+        game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Player(s) not found or not valid.", "All")
     end
     
     print("carryTarget function ended.")
@@ -175,46 +185,33 @@ end
 local function attackAndCarry(targetPlayer)
     print("attackAndCarry function started.")
     
-    local altPlayer = game.Players:GetPlayerByUserId(altAccounts[1]) -- İlk alternatif hesabı kullan
+    local altPlayer = game.Players:GetPlayerByUserId(altAccounts[1])
     if altPlayer and altPlayer.Character and altPlayer.Character:FindFirstChild("HumanoidRootPart") then
         print("Alt player and character found.")
         
-        local isAttacking = true -- Saldırıyı devam ettirmek için bir bayrak
+        local isAttacking = true
         
-        -- Hedefin önüne doğru bir vuruş yapmak için hedefin pozisyonunu ve yönünü hesaplayın
-        local targetPosition = targetPlayer.Character.HumanoidRootPart.Position
-        local direction = (targetPosition - altPlayer.Character.HumanoidRootPart.Position).unit
-        local hitPoint = targetPosition - direction * 2 -- Hedefin önüne 2 birim ötelenmiş bir nokta
-
-        -- Vuruş pozisyonunu ayarla
-        altPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(hitPoint)
-
-        -- Combat aracını bul
         local tool = altPlayer.Backpack:FindFirstChild("Combat")
         if tool then
             print("Combat tool found.")
             
-            -- Hedefin sağlığına göre saldırıyı devam ettir veya durdur
             while targetPlayer.Character.Humanoid.Health > 0 and isAttacking do
                 print("Attacking...")
                 if targetPlayer.Character.Humanoid.Health <= 15 then
-                    -- Target'in sağlığı 15'ten düşükse, saldırıyı durdur ve Combat aracını unequip yap
                     print("Target health is 15 or less. Stopping attack and unequipping combat tool.")
                     isAttacking = false
                     if altPlayer.Character and altPlayer.Character:FindFirstChildOfClass("Humanoid") then
                         altPlayer.Character:FindFirstChildOfClass("Humanoid"):UnequipTools()
                     end
                 else
-                    -- Target'in sağlığı 15'ten fazlaysa, saldırmaya devam et ve Combat aracını equip yap
                     if not altPlayer.Character:FindFirstChildOfClass("Humanoid"):FindFirstChildOfClass("Tool") then
                         tool.Parent = altPlayer.Character
                     end
                     tool:Activate()
-                    task.wait(0.2) -- Gerekirse bekleme süresini ayarlayın
+                    task.wait(0.2)
                 end
             end
             
-            -- Hedefin sağlığı 0'dan büyük ve 15'ten küçükse, hedefi taşı ve bırak
             if targetPlayer.Character.Humanoid.Health > 0 and targetPlayer.Character.Humanoid.Health <= 15 then
                 print("Target health is between 0 and 15. Carrying...")
                 carryTarget(targetPlayer)
