@@ -151,30 +151,30 @@ local function unWallet()
 end
 
 local function attackAndCarry(targetPlayer)
-    local altPlayer = game.Players:GetPlayerByUserId(altAccounts[1]) -- Use the first alt account
+    local altPlayer = game.Players:GetPlayerByUserId(altAccounts[1]) -- İlk alt hesabı kullan
     if altPlayer and altPlayer.Character and altPlayer.Character:FindFirstChild("HumanoidRootPart") then
         altPlayer.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 0, 5)
-        -- Equip heavy punch tool (assuming it's named "HeavyPunch")
-        local tool = altPlayer.Backpack:FindFirstChild("HeavyPunch")
+        -- Combat isimli aracı giydir (varsayılan olarak ismi Combat olarak belirlendi)
+        local tool = altPlayer.Backpack:FindFirstChild("Combat")
         if tool then
             altPlayer.Character:FindFirstChildOfClass("Humanoid"):EquipTool(tool)
-            -- Spam heavy punch
+            -- Ağır vuruş yap
             while targetPlayer.Character.Humanoid.Health > 0 do
                 tool:Activate()
-                task.wait(0.2) -- Adjust the wait time as needed
+                task.wait(0.2) -- Gerekirse bekleme süresini ayarla
             end
-            -- Carry the target
+            -- Hedefi taşı
             game.ReplicatedStorage.MainEvent:FireServer('Carry', targetPlayer)
             task.wait(1)
-            -- Teleport back to host
+            -- Host'a geri teleporte ol
             local ownerPlayer = game.Players:GetPlayerByUserId(hostUserId)
             if ownerPlayer and ownerPlayer.Character and ownerPlayer.Character:FindFirstChild("HumanoidRootPart") then
                 altPlayer.Character.HumanoidRootPart.CFrame = ownerPlayer.Character.HumanoidRootPart.CFrame
-                -- Drop the target
+                -- Hedefi bırak
                 game.ReplicatedStorage.MainEvent:FireServer('Drop', targetPlayer)
             end
         else
-            game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("HeavyPunch tool not found.", "All")
+            game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Combat aracı bulunamadı.", "All")
         end
     end
 end
