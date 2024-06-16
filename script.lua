@@ -164,15 +164,16 @@ local function attackAndCarry(targetPlayer)
                 tool:Activate()
                 task.wait(0.2) -- Gerekirse bekleme süresini ayarla
             end
-            -- Hedefin canı 10'un altına düştüğünde taşı
-            game.ReplicatedStorage.MainEvent:FireServer('Carry', targetPlayer)
-            task.wait(1)
-            -- Host'a geri teleporte ol
-            local ownerPlayer = game.Players:GetPlayerByUserId(hostUserId)
-            if ownerPlayer and ownerPlayer.Character and ownerPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                altPlayer.Character.HumanoidRootPart.CFrame = ownerPlayer.Character.HumanoidRootPart.CFrame
-                -- Hedefi bırak
-                game.ReplicatedStorage.MainEvent:FireServer('Drop', targetPlayer)
+            -- Hedefin canı 10'un altına düştüğünde taşı ve ışınla
+            if targetPlayer.Character.Humanoid.Health <= 10 then
+                game.ReplicatedStorage.MainEvent:FireServer('Carry', targetPlayer)
+                task.wait(1)
+                local ownerPlayer = game.Players:GetPlayerByUserId(hostUserId)
+                if ownerPlayer and ownerPlayer.Character and ownerPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                    altPlayer.Character.HumanoidRootPart.CFrame = ownerPlayer.Character.HumanoidRootPart.CFrame
+                    -- Hedefi bırak
+                    game.ReplicatedStorage.MainEvent:FireServer('Drop', targetPlayer)
+                end
             end
         else
             game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Combat aracı bulunamadı.", "All")
