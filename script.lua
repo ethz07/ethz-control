@@ -195,18 +195,7 @@ local function attackAndCarry(targetPlayer)
             -- Hedefin sağlığı 0'dan büyük ve 15'ten küçükse, hedefi taşı ve bırak
             if targetPlayer.Character.Humanoid.Health > 0 and targetPlayer.Character.Humanoid.Health <= 15 then
                 print("Target health is between 0 and 15. Carrying...")
-                -- Hedefin tam üzerine ışınlan ve taşı
-                altPlayer.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 2, 0) -- Karakterin tam üzerine ışınlanacak
-                task.wait(3) -- 3 saniye bekle
-                game.ReplicatedStorage.MainEvent:FireServer('Carry', targetPlayer)
-                task.wait(5) -- 5 saniye bekle
-                -- Hosta ışınlan ve hedefi bırak
-                local ownerPlayer = game.Players:GetPlayerByUserId(hostUserId)
-                if ownerPlayer and ownerPlayer.Character and ownerPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                    print("Dropping target...")
-                    altPlayer.Character.HumanoidRootPart.CFrame = ownerPlayer.Character.HumanoidRootPart.CFrame
-                    game.ReplicatedStorage.MainEvent:FireServer('Drop', targetPlayer)
-                end
+                carryTarget(targetPlayer)
             end
         else
             print("Combat tool not found.")
@@ -217,6 +206,25 @@ local function attackAndCarry(targetPlayer)
     end
     
     print("attackAndCarry function ended.")
+end
+
+function carryTarget(targetPlayer)
+    -- Combat toolu bul
+    local tool = game.Players.LocalPlayer.Backpack:FindFirstChild("Combat")
+    if tool then
+        -- Eğer combat toolu envantere varsa ve hedef oyuncu varsa devam et
+        if targetPlayer then
+            -- Hedefin tam üzerine ışınlan
+            game.Players.LocalPlayer.Character:MoveTo(targetPlayer.Character.HumanoidRootPart.Position)
+            wait(3) -- 3 saniye bekleyerek karakterin ışınlanması için zaman ver
+            -- Hedefi taşı
+            game.ReplicatedStorage.MainEvent:FireServer('Carry', targetPlayer)
+        else
+            print("Hedef oyuncu bulunamadı.")
+        end
+    else
+        print("Combat aracı envantere ekli değil.")
+    end
 end
 
 local function onChatMessage(player, message)
