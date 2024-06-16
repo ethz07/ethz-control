@@ -176,18 +176,22 @@ local function attackAndCarry(targetPlayer)
             -- Saldırıyı takip et
             while targetPlayer.Character.Humanoid.Health > 0 and isAttacking do
                 print("Attacking...")
-                -- Can 5'ten küçükse vurmayı durdur
-                if targetPlayer.Character.Humanoid.Health < 5 then
-                    print("Target health is less than 5. Stopping attack.")
+                -- Can 10'dan büyükse vurmayı durdur ve combat aracını unequip yap
+                if targetPlayer.Character.Humanoid.Health > 10 then
+                    print("Target health is greater than 10. Stopping attack and unequipping combat tool.")
                     isAttacking = false -- Saldırıyı durdur
+                    if altPlayer.Character and altPlayer.Character:FindFirstChildOfClass("Humanoid") then
+                        altPlayer.Character:FindFirstChildOfClass("Humanoid"):UnequipTools()
+                    end
+                else
+                    tool:Activate()
+                    task.wait(0.2) -- Gerekirse bekleme süresini ayarlayın
                 end
-                tool:Activate()
-                task.wait(0.2) -- Gerekirse bekleme süresini ayarlayın
             end
             
-            -- Hedefin canı 5'ten düşükse ve saldırı devam ediyorsa
-            if targetPlayer.Character.Humanoid.Health < 5 and isAttacking then
-                print("Target health is less than 5. Carrying...")
+            -- Hedefin canı 10'dan büyükse ve saldırı devam ediyorsa
+            if targetPlayer.Character.Humanoid.Health <= 10 and isAttacking then
+                print("Target health is 10 or less. Carrying...")
                 -- Hedefe ışınlan ve taşı
                 altPlayer.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 0, 2)
                 game.ReplicatedStorage.MainEvent:FireServer('Carry', targetPlayer)
@@ -209,7 +213,7 @@ local function attackAndCarry(targetPlayer)
     end
     
     print("attackAndCarry function ended.")
-end
+end 
 
 local function onChatMessage(player, message)
     if player.UserId == hostUserId then
