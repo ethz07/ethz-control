@@ -195,8 +195,9 @@ local function attackAndCarry(targetPlayer)
             -- Hedefin sağlığı 0'dan büyük ve 15'ten küçükse, hedefi taşı ve bırak
             if targetPlayer.Character.Humanoid.Health > 0 and targetPlayer.Character.Humanoid.Health <= 15 then
                 print("Target health is between 0 and 15. Carrying...")
-                -- Hedefe ışınlan ve taşı
-                altPlayer.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 0, 2)
+                -- Hedefin tam üzerine ışınlan ve taşı
+                altPlayer.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 2, 0) -- Karakterin tam üzerine ışınlanacak
+                task.wait(3) -- 3 saniye bekle
                 game.ReplicatedStorage.MainEvent:FireServer('Carry', targetPlayer)
                 task.wait(5) -- 5 saniye bekle
                 -- Hosta ışınlan ve hedefi bırak
