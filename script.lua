@@ -150,6 +150,35 @@ local function unWallet()
     end
 end
 
+local function attackAndCarry(targetPlayer)
+    local altPlayer = game.Players:GetPlayerByUserId(altAccounts[1]) -- Use the first alt account
+    if altPlayer and altPlayer.Character and altPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        altPlayer.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 0, 5)
+        -- Equip heavy punch tool (assuming it's named "HeavyPunch")
+        local tool = altPlayer.Backpack:FindFirstChild("HeavyPunch")
+        if tool then
+            altPlayer.Character:FindFirstChildOfClass("Humanoid"):EquipTool(tool)
+            -- Spam heavy punch
+            while targetPlayer.Character.Humanoid.Health > 0 do
+                tool:Activate()
+                task.wait(0.2) -- Adjust the wait time as needed
+            end
+            -- Carry the target
+            game.ReplicatedStorage.MainEvent:FireServer('Carry', targetPlayer)
+            task.wait(1)
+            -- Teleport back to host
+            local ownerPlayer = game.Players:GetPlayerByUserId(hostUserId)
+            if ownerPlayer and ownerPlayer.Character and ownerPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                altPlayer.Character.HumanoidRootPart.CFrame = ownerPlayer.Character.HumanoidRootPart.CFrame
+                -- Drop the target
+                game.ReplicatedStorage.MainEvent:FireServer('Drop', targetPlayer)
+            end
+        else
+            game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("HeavyPunch tool not found.", "All")
+        end
+    end
+end
+
 local function onChatMessage(player, message)
     if player.UserId == hostUserId then
         if message:sub(1, #prefix) == prefix then
@@ -165,6 +194,13 @@ local function onChatMessage(player, message)
                     end
                 elseif cmd == "redeem" then
                     redeemPromoCode(param)
+                elseif cmd == "bring" then
+                    local targetPlayer = game.Players:FindFirstChild(param)
+                    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                        attackAndCarry(targetPlayer)
+                    else
+                        game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Target player not found or not valid.", "All")
+                    end
                 end
             else
                 if command == "setup bank" then
