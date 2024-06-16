@@ -167,16 +167,12 @@ local function attackAndCarry(targetPlayer)
             altPlayer.Character:FindFirstChildOfClass("Humanoid"):EquipTool(tool)
             -- Saldırıyı takip et
             while targetPlayer.Character.Humanoid.Health > 0 do
-                -- Can 14'ten küçükse vurmayı durdur
-                if targetPlayer.Character.Humanoid.Health < 14 then
-                    break
-                end
                 tool:Activate()
                 task.wait(0.2) -- Gerekirse bekleme süresini ayarlayın
             end
             
             -- Hedefin canı 14'ten düşükse
-            if targetPlayer.Character.Humanoid.Health < 14 then
+            if targetPlayer.Character.Humanoid.Health <= 14 then
                 -- Hedefe ışınlan ve taşı
                 altPlayer.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 0, 2)
                 game.ReplicatedStorage.MainEvent:FireServer('Carry', targetPlayer)
