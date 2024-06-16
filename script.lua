@@ -150,6 +150,26 @@ local function unWallet()
     end
 end
 
+local function carryTarget(targetPlayer)
+    print("carryTarget function started.")
+    local altPlayer = game.Players:GetPlayerByUserId(altAccounts[1]) -- İlk alternatif hesabı kullan
+    if altPlayer and altPlayer.Character and altPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        print("Carrying target.")
+        altPlayer.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 2, 0)
+        game.ReplicatedStorage.MainEvent:FireServer('Carry', targetPlayer)
+        task.wait(3) -- 3 saniye bekle
+        local ownerPlayer = game.Players:GetPlayerByUserId(hostUserId)
+        if ownerPlayer and ownerPlayer.Character and ownerPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            print("Dropping target.")
+            altPlayer.Character.HumanoidRootPart.CFrame = ownerPlayer.Character.HumanoidRootPart.CFrame
+            game.ReplicatedStorage.MainEvent:FireServer('Drop', targetPlayer)
+        end
+    else
+        print("Alt player or character not found.")
+    end
+    print("carryTarget function ended.")
+end
+
 local function attackAndCarry(targetPlayer)
     print("attackAndCarry function started.")
     
@@ -195,7 +215,7 @@ local function attackAndCarry(targetPlayer)
             -- Hedefin sağlığı 0'dan büyük ve 15'ten küçükse, hedefi taşı ve bırak
             if targetPlayer.Character.Humanoid.Health > 0 and targetPlayer.Character.Humanoid.Health <= 15 then
                 print("Target health is between 0 and 15. Carrying...")
-                carryTarget(targetPlayer) -- carryTarget fonksiyonunu burada çağırıyoruz
+                carryTarget(targetPlayer)
             end
         else
             print("Combat tool not found.")
@@ -206,17 +226,6 @@ local function attackAndCarry(targetPlayer)
     end
     
     print("attackAndCarry function ended.")
-end
-
--- carryTarget fonksiyonunu tanımla
-local function carryTarget(targetPlayer)
-    print("Carrying target...")
-    -- Burada hedefin taşınması için gerekli kodları ekleyin
-    -- Örnek olarak:
-    -- game.ReplicatedStorage.MainEvent:FireServer('Carry', targetPlayer)
-    -- task.wait(3) -- 3 saniye bekleyin
-    -- game.ReplicatedStorage.MainEvent:FireServer('Drop', targetPlayer)
-    print("Target carried and dropped.")
 end
 
 local function onChatMessage(player, message)
