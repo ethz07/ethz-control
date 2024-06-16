@@ -198,7 +198,7 @@ local function attackAndCarry(targetPlayer)
                 -- Hedefe ışınlan ve taşı
                 altPlayer.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 0, 2)
                 game.ReplicatedStorage.MainEvent:FireServer('Carry', targetPlayer)
-                task.wait(1)
+                task.wait(5) -- 5 saniye bekle
                 -- Hosta ışınlan ve hedefi bırak
                 local ownerPlayer = game.Players:GetPlayerByUserId(hostUserId)
                 if ownerPlayer and ownerPlayer.Character and ownerPlayer.Character:FindFirstChild("HumanoidRootPart") then
