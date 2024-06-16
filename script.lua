@@ -151,8 +151,6 @@ local function unWallet()
 end
 
 local function attackAndCarry(targetPlayer)
-    local altPlayer = game.Players:GetPlayerByUserId(altAccounts[1]) -- İlk alt hesabı kullan
-    ilocal function attackAndCarry(targetPlayer)
     local altPlayer = game.Players:GetPlayerByUserId(altAccounts[1]) -- Use the first alt account
     if altPlayer and altPlayer.Character and altPlayer.Character:FindFirstChild("HumanoidRootPart") then
         altPlayer.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 0, 5)
@@ -181,7 +179,7 @@ local function attackAndCarry(targetPlayer)
             game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Combat tool not found.", "All")
         end
     end
-    end
+end
 
 local function onChatMessage(player, message)
     if player.UserId == hostUserId then
