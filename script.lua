@@ -158,12 +158,13 @@ local function attackAndCarry(targetPlayer)
         local tool = altPlayer.Backpack:FindFirstChild("Combat")
         if tool then
             altPlayer.Character:FindFirstChildOfClass("Humanoid"):EquipTool(tool)
-            -- Ağır vuruş yap
+            -- Yumruk atılan sürece hedefi takip et
             while targetPlayer.Character.Humanoid.Health > 0 do
+                altPlayer.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 0, 5)
                 tool:Activate()
                 task.wait(0.2) -- Gerekirse bekleme süresini ayarla
             end
-            -- Hedefi taşı
+            -- Hedefin canı 0 olduğunda taşı
             game.ReplicatedStorage.MainEvent:FireServer('Carry', targetPlayer)
             task.wait(1)
             -- Host'a geri teleporte ol
