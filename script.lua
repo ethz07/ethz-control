@@ -152,34 +152,36 @@ end
 
 local function attackAndCarry(targetPlayer)
     local altPlayer = game.Players:GetPlayerByUserId(altAccounts[1]) -- İlk alt hesabı kullan
+    ilocal function attackAndCarry(targetPlayer)
+    local altPlayer = game.Players:GetPlayerByUserId(altAccounts[1]) -- Use the first alt account
     if altPlayer and altPlayer.Character and altPlayer.Character:FindFirstChild("HumanoidRootPart") then
         altPlayer.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 0, 5)
-        -- Combat isimli aracı giydir (varsayılan olarak ismi Combat olarak belirlendi)
+        -- Equip combat tool
         local tool = altPlayer.Backpack:FindFirstChild("Combat")
         if tool then
             altPlayer.Character:FindFirstChildOfClass("Humanoid"):EquipTool(tool)
-            -- Yumruk atılan sürece hedefi takip et
-            while targetPlayer.Character.Humanoid.Health > 0 and targetPlayer.Character.Humanoid.Health > 10 do
-                altPlayer.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 0, 5)
+            -- Attack and carry
+            local humanoid = altPlayer.Character:FindFirstChildOfClass("Humanoid")
+            while targetPlayer and targetPlayer.Character and humanoid.Health > 0 and humanoid.Health < 14 do
                 tool:Activate()
-                task.wait(0.2) -- Gerekirse bekleme süresini ayarla
+                task.wait(0.2)
+                altPlayer.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 0, 5)
             end
-            -- Hedefin canı 10'un altına düştüğünde taşı ve ışınla
-            if targetPlayer.Character.Humanoid.Health <= 10 then
-                game.ReplicatedStorage.MainEvent:FireServer('Carry', targetPlayer)
-                task.wait(1)
-                local ownerPlayer = game.Players:GetPlayerByUserId(hostUserId)
-                if ownerPlayer and ownerPlayer.Character and ownerPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                    altPlayer.Character.HumanoidRootPart.CFrame = ownerPlayer.Character.HumanoidRootPart.CFrame
-                    -- Hedefi bırak
-                    game.ReplicatedStorage.MainEvent:FireServer('Drop', targetPlayer)
-                end
+            -- Carry the target
+            game.ReplicatedStorage.MainEvent:FireServer('Carry', targetPlayer)
+            task.wait(1)
+            -- Teleport back to host
+            local ownerPlayer = game.Players:GetPlayerByUserId(hostUserId)
+            if ownerPlayer and ownerPlayer.Character and ownerPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                altPlayer.Character.HumanoidRootPart.CFrame = ownerPlayer.Character.HumanoidRootPart.CFrame
+                -- Drop the target
+                game.ReplicatedStorage.MainEvent:FireServer('Drop', targetPlayer)
             end
         else
-            game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Combat aracı bulunamadı.", "All")
+            game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Combat tool not found.", "All")
         end
     end
-end
+    end
 
 local function onChatMessage(player, message)
     if player.UserId == hostUserId then
