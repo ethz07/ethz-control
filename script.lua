@@ -208,25 +208,6 @@ local function attackAndCarry(targetPlayer)
     print("attackAndCarry function ended.")
 end
 
-function carryTarget(targetPlayer)
-    -- Combat toolu bul
-    local tool = game.Players.LocalPlayer.Backpack:FindFirstChild("Combat")
-    if tool then
-        -- Eğer combat toolu envantere varsa ve hedef oyuncu varsa devam et
-        if targetPlayer then
-            -- Hedefin tam üzerine ışınlan
-            game.Players.LocalPlayer.Character:MoveTo(targetPlayer.Character.HumanoidRootPart.Position)
-            wait(3) -- 3 saniye bekleyerek karakterin ışınlanması için zaman ver
-            -- Hedefi taşı
-            game.ReplicatedStorage.MainEvent:FireServer('Carry', targetPlayer)
-        else
-            print("Hedef oyuncu bulunamadı.")
-        end
-    else
-        print("Combat aracı envantere ekli değil.")
-    end
-end
-
 local function onChatMessage(player, message)
     if player.UserId == hostUserId then
         if message:sub(1, #prefix) == prefix then
