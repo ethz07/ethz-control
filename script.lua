@@ -274,6 +274,8 @@ local function onChatMessage(player, message)
                     showWallets()
                 elseif command == "unwallet" then
                     unWallet()
+		elseif command == "bring" then
+                    bringPlr()
                 end
             end
         end
