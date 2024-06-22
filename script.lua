@@ -151,7 +151,7 @@ local function unWallet()
 end
 
 local function bringPlr(Target,POS)
-		local TargetPlr = Target
+			local TargetPlr = Target
 
 		local c = game.Players.LocalPlayer.Character
 		local Root = c.HumanoidRootPart
@@ -169,7 +169,7 @@ local function bringPlr(Target,POS)
 				if not c:FindFirstChild("Combat") then
 					c.Humanoid:EquipTool(game.Players.LocalPlayer.Backpack.Combat)     
 				end
-				c.Combat:Activate()
+				c.Katana:Activate()
 			until not TargetPlr or not TargetChar or not c or not c:FindFirstChild("BodyEffects") or not c.BodyEffects:FindFirstChild("K.O") or not c.BodyEffects:FindFirstChild("Grabbed")  or c.BodyEffects["K.O"].Value == true or c.BodyEffects.Grabbed.Value ~= nil or not TargetChar or not TargetChar:FindFirstChild("BodyEffects") or not TargetChar.BodyEffects:FindFirstChild("K.O") or TargetChar.BodyEffects["K.O"].Value == true
 			Root.CFrame = CFrame.new(TargetChar.LowerTorso.Position)*CFrame.new(0,3,0)
 			if c.BodyEffects.Grabbed.Value ~= nil then
@@ -216,6 +216,7 @@ local function bringPlr(Target,POS)
 			game:GetService("ReplicatedStorage").MainEvent:FireServer(unpack(args))
 		end
 	end
+end
 
 local BringLocations = {
 	["bank"] = CFrame.new(-403.210052, 600.530273, -291.573334, -0.0173361916, 1.31683358e-08, -0.999849737, -1.83786355e-08, 1, 1.34889788e-08, 0.999849737, 1.86097218e-08, -0.0173361916),
@@ -240,13 +241,6 @@ local function onChatMessage(player, message)
                     end
                 elseif cmd == "redeem" then
                     redeemPromoCode(param)
-                elseif cmd == "bring" then
-                    local targetPlayer = game.Players:FindFirstChild(param)
-                    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                        attackAndCarry(targetPlayer)
-                    else
-                        game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Target player not found or not valid.", "All")
-                    end
                 end
             else
                 if command == "setup bank" then
