@@ -114,9 +114,6 @@ local function showWallets()
             local walletItem = altPlayer.Backpack:FindFirstChild("Wallet")
             if walletItem then
                 altPlayer.Character:FindFirstChildOfClass("Humanoid"):EquipTool(walletItem)
-                game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Wallet equipped.", "All")
-            else
-                game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Wallet not found in Backpack.", "All")
             end
         end
     end
@@ -140,12 +137,7 @@ local function unWallet()
             local humanoid = altPlayer.Character:FindFirstChildOfClass("Humanoid")
             if humanoid then
                 humanoid:UnequipTools()
-                game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Wallet unequipped.", "All")
-            else
-                game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Humanoid not found.", "All")
             end
-        else
-            game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Alt player or character not found.", "All")
         end
     end
 end
