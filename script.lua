@@ -216,7 +216,6 @@ local function bringPlr(Target,POS)
 			game:GetService("ReplicatedStorage").MainEvent:FireServer(unpack(args))
 		end
 	end
-end
 
 local BringLocations = {
 	["bank"] = CFrame.new(-403.210052, 600.530273, -291.573334, -0.0173361916, 1.31683358e-08, -0.999849737, -1.83786355e-08, 1, 1.34889788e-08, 0.999849737, 1.86097218e-08, -0.0173361916),
