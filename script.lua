@@ -260,7 +260,7 @@ local function onChatMessage(player, message)
                     teleportAltsToLocation(locations.basketball)
                 elseif command == "setup school" then
                     teleportAltsToLocation(locations.school)
-                elseif command == "bring host" then
+                elseif command == "bring" then
                     bringAltsToOwner()
                 elseif command == "drop" then
                     startDroppingCash()
