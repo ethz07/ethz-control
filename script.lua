@@ -43,6 +43,114 @@ local function teleportAltsToLocation(location)
     end
 end
 
+local function bringAltsToOwner()
+    local ownerPlayer = game.Players:GetPlayerByUserId(hostUserId)
+    if ownerPlayer and ownerPlayer.Character and ownerPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        local ownerPosition = ownerPlayer.Character.HumanoidRootPart.Position
+        teleportAltsToLocation(ownerPosition)
+    end
+end
+
+local function startDroppingCash()
+    isDropping = true
+    for _, altId in ipairs(altAccounts) do
+        local altPlayer = game.Players:GetPlayerByUserId(altId)
+        if altPlayer then
+            game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Started Dropping.", "All")
+            game.ReplicatedStorage.MainEvent:FireServer('Block', true)
+        end
+    end
+    while isDropping do
+        for _, altId in ipairs(altAccounts) do
+            local altPlayer = game.Players:GetPlayerByUserId(altId)
+            if altPlayer then
+                game.ReplicatedStorage.MainEvent:FireServer('DropMoney', '10000')
+                task.wait(0.5)
+            end
+        end
+    end
+end
+
+local function stopDroppingCash()
+    if isDropping then
+        isDropping = false
+        for _, altId in ipairs(altAccounts) do
+            local altPlayer = game.Players:GetPlayerByUserId(altId)
+            if altPlayer then
+                game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Stopped Dropping.", "All")
+                game.ReplicatedStorage.MainEvent:FireServer('Block', false)
+            end
+        end
+    end
+end
+
+local function airlock()
+    if workspace:FindFirstChild("AirlockPart") then 
+        workspace:FindFirstChild("AirlockPart"):Destroy() 
+    end
+    local Part = Instance.new("Part", workspace)
+    Part.Name = "AirlockPart"
+    Part.Size = Vector3.new(4, 1.2, 4)
+    Part.Transparency = 1
+    Part.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 5, 0)
+    Part.Anchored = true
+
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Part.CFrame + Vector3.new(0, 2.5, 0)
+    wait(0.25)
+end
+
+local function unlock()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
+
+    if workspace:FindFirstChild("AirlockPart") then
+        workspace:FindFirstChild("AirlockPart"):Destroy()
+    end
+end
+
+local function resetAlts()
+    for _, altId in ipairs(altAccounts) do
+        local altPlayer = game.Players:GetPlayerByUserId(altId)
+        if altPlayer and altPlayer.Character and altPlayer.Character:FindFirstChild("Humanoid") then
+            altPlayer.Character.Humanoid.Health = 0
+        end
+    end
+end
+
+local function showWallets()
+    for _, altId in ipairs(altAccounts) do
+        local altPlayer = game.Players:GetPlayerByUserId(altId)
+        if altPlayer and altPlayer.Backpack then
+            local walletItem = altPlayer.Backpack:FindFirstChild("Wallet")
+            if walletItem then
+                altPlayer.Character:FindFirstChildOfClass("Humanoid"):EquipTool(walletItem)
+            end
+        end
+    end
+end
+
+local function redeemPromoCode(code)
+    local MainEvent = game.ReplicatedStorage.MainEvent
+    for _, altId in ipairs(altAccounts) do
+        local altPlayer = game.Players:GetPlayerByUserId(altId)
+        if altPlayer then
+            MainEvent:FireServer('EnterPromoCode', code)
+            task.wait(2)
+        end
+    end
+end
+
+local function unWallet()
+    for _, altId in ipairs(altAccounts) do
+        local altPlayer = game.Players:GetPlayerByUserId(altId)
+        if altPlayer and altPlayer.Character then
+            local humanoid = altPlayer.Character:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid:UnequipTools()
+            end
+        end
+    end
+end
+
 local function bringPlr(Target, POS)
     local TargetPlr = Target
 
@@ -129,14 +237,12 @@ local function onChatMessage(player, message)
                 local cmd = command:sub(1, spaceIndex - 1)
                 local param = command:sub(spaceIndex + 1)
                 if cmd == "bring" then
-                    if param == "host" then
-                        bringPlr(player)
-                    else
-                        local targetPlayer = game.Players:FindFirstChild(param)
-                        if targetPlayer then
-                            bringPlr(targetPlayer)
-                        end
+                    local spot
+                    if param == "host" or BringLocations[param] then
+                        spot = param
+                        param = nil
                     end
+                    bringPlr(param, spot)
                 elseif cmd == "setup" then
                     local location = locations[param]
                     if location then
@@ -154,7 +260,7 @@ local function onChatMessage(player, message)
                     teleportAltsToLocation(locations.basketball)
                 elseif command == "setup school" then
                     teleportAltsToLocation(locations.school)
-                elseif command == "bring" then
+                elseif command == "bring host" then
                     bringAltsToOwner()
                 elseif command == "drop" then
                     startDroppingCash()
