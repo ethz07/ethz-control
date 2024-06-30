@@ -7,22 +7,22 @@ local altAccounts = getgenv().Alts or { -- Alt hesapların ID'leri
 local userId = game:GetService('Players').LocalPlayer.UserId -- Şu anki kullanıcı kimliği
 
 -- Fonksiyonlar
-local function loadAntiCheatScripts()
+local function loadAltAccountScripts()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/ethz07/stuff/main/AntiAfk.Lua'))()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/ethz07/stuff/main/Optimization.Lua'))()
 end
 
-local function loadCashCounterScript()
+local function loadHostScript()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/ethz07/stuff/main/CashCounter.Lua'))()
 end
 
 -- Kimlik kontrolü ve script yükleme
 if userId == hostUserId then
     -- Host kullanıcısı
-    loadCashCounterScript()
+    loadHostScript()
 elseif table.find(altAccounts, userId) then
     -- Alt hesaplar
-    loadAntiCheatScripts()
+    loadAltAccountScripts()
 else
     warn("Bu scripti kullanma izniniz yok.")
 end
