@@ -91,19 +91,20 @@ local function stopDroppingCash()
 end
 
 local function airlock()
+local function airlock()
     if workspace:FindFirstChild("AirlockPart") then 
         workspace:FindFirstChild("AirlockPart"):Destroy() 
     end
     local Part = Instance.new("Part", workspace)
     Part.Name = "AirlockPart"
     Part.Size = Vector3.new(4, 1.2, 4)
-    Part.Transparency = 1
+    Part.Transparency = NumberSequence.new(1)
     Part.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 5, 0)
     Part.Anchored = true
 
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Part.CFrame + Vector3.new(0, 2.5, 0)
     wait(0.25)
-end
+    end
 
 local function unlock()
     game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
