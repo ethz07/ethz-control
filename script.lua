@@ -91,7 +91,6 @@ local function stopDroppingCash()
 end
 
 local function airlock()
-local function airlock()
     if workspace:FindFirstChild("AirlockPart") then 
         workspace:FindFirstChild("AirlockPart"):Destroy() 
     end
