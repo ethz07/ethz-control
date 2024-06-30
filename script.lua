@@ -238,6 +238,8 @@ local BringLocations = {
 }
 
 local function onChatMessage(player, message)
+    print("Prefix:", prefix)
+print("Message:", message)
     if player.UserId == hostUserId then
         if message:sub(1, #prefix) == prefix then
             local command = message:sub(#prefix + 1)
