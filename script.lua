@@ -1,21 +1,32 @@
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-local VirtualUser = game:GetService("VirtualUser")
-
-LocalPlayer.Idled:connect(function()
-    VirtualUser:CaptureController()
-    VirtualUser:ClickButton2(Vector2.new())
-end)
-
 local hostUserId = getgenv().Host or 1596382068 -- Host Userid
-local fpsCap = getgenv().Fps or 5 -- FpsCap for Alts
-local prefix = getgenv().Prefix or '!' -- Example Prefix "!" "?" "/" "."
-
-local altAccounts = getgenv().Alts or { -- alt ids here
+local altAccounts = getgenv().Alts or { -- Alt hesapların ID'leri
     5590716577,
     5590724729,
     5590729811,
 }
+local userId = game:GetService('Players').LocalPlayer.UserId -- Şu anki kullanıcı kimliği
+
+-- Fonksiyonlar
+local function loadAntiCheatScripts()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/ethz07/stuff/main/AntiCheatBypass.Lua'))()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/ethz07/stuff/main/AntiAfk.Lua'))()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/ethz07/stuff/main/Optimization.Lua'))()
+end
+
+local function loadCashCounterScript()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/ethz07/stuff/main/CashCounter.Lua'))()
+end
+
+-- Kimlik kontrolü ve script yükleme
+if userId == hostUserId then
+    -- Host kullanıcısı
+    loadCashCounterScript()
+elseif table.find(altAccounts, userId) then
+    -- Alt hesaplar
+    loadAntiCheatScripts()
+else
+    warn("Bu scripti kullanma izniniz yok.")
+end
 
 local locations = {
     bank = {
