@@ -8,7 +8,6 @@ local userId = game:GetService('Players').LocalPlayer.UserId -- Åžu anki kullanÄ
 
 -- Fonksiyonlar
 local function loadAntiCheatScripts()
-    loadstring(game:HttpGet('https://raw.githubusercontent.com/ethz07/stuff/main/AntiCheatBypass.Lua'))()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/ethz07/stuff/main/AntiAfk.Lua'))()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/ethz07/stuff/main/Optimization.Lua'))()
 end
