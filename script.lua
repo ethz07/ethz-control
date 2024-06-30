@@ -235,56 +235,54 @@ local BringLocations = {
 }
 
 local function onChatMessage(player, message)
-    if player.UserId ~= hostUserId then
-        return
-    end
-    
-    if message:sub(1, #prefix) == prefix then
-        local command = message:sub(#prefix + 1)
-        local spaceIndex = command:find(" ")
-        if spaceIndex then
-            local cmd = command:sub(1, spaceIndex - 1)
-            local param = command:sub(spaceIndex + 1)
-            if cmd == "bring" then
-                local spot
-                if param == "host" or BringLocations[param] then
-                    spot = param
-                    param = nil
+    if player.UserId == hostUserId then
+        if message:sub(1, #prefix) == prefix then
+            local command = message:sub(#prefix + 1)
+            local spaceIndex = command:find(" ")
+            if spaceIndex then
+                local cmd = command:sub(1, spaceIndex - 1)
+                local param = command:sub(spaceIndex + 1)
+                if cmd == "bring" then
+                    local spot
+                    if param == "host" or BringLocations[param] then
+                        spot = param
+                        param = nil
+                    end
+                    bringPlr(param, spot)
+                elseif cmd == "setup" then
+                    local location = locations[param]
+                    if location then
+                        teleportAltsToLocation(location)
+                    end
+                elseif cmd == "redeem" then
+                    redeemPromoCode(param)
                 end
-                bringPlr(param, spot)
-            elseif cmd == "setup" then
-                local location = locations[param]
-                if location then
-                    teleportAltsToLocation(location)
+            else
+                if command == "setup bank" then
+                    teleportAltsToLocation(locations.bank)
+                elseif command == "setup club" then
+                    teleportAltsToLocation(locations.club)
+                elseif command == "setup basketball" then
+                    teleportAltsToLocation(locations.basketball)
+                elseif command == "setup school" then
+                    teleportAltsToLocation(locations.school)
+                elseif command == "bring" then
+                    bringAltsToOwner()
+                elseif command == "drop" then
+                    startDroppingCash()
+                elseif command == "stop" then
+                    stopDroppingCash()
+                elseif command == "airlock" then
+                    airlock()
+                elseif command == "unlock" then
+                    unlock()
+                elseif command == "reset" then
+                    resetAlts()
+                elseif command == "wallet" then
+                    showWallets()
+                elseif command == "unwallet" then
+                    unWallet()
                 end
-            elseif cmd == "redeem" then
-                redeemPromoCode(param)
-            end
-        else
-            if command == "setup bank" then
-                teleportAltsToLocation(locations.bank)
-            elseif command == "setup club" then
-                teleportAltsToLocation(locations.club)
-            elseif command == "setup basketball" then
-                teleportAltsToLocation(locations.basketball)
-            elseif command == "setup school" then
-                teleportAltsToLocation(locations.school)
-            elseif command == "bring" then
-                bringAltsToOwner()
-            elseif command == "drop" then
-                startDroppingCash()
-            elseif command == "stop" then
-                stopDroppingCash()
-            elseif command == "airlock" then
-                airlock()
-            elseif command == "unlock" then
-                unlock()
-            elseif command == "reset" then
-                resetAlts()
-            elseif command == "wallet" then
-                showWallets()
-            elseif command == "unwallet" then
-                unWallet()
             end
         end
     end
