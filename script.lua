@@ -9,7 +9,6 @@ local userId = game:GetService('Players').LocalPlayer.UserId -- Åžu anki kullanÄ
 -- Fonksiyonlar
 local function loadAltAccountScripts()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/ethz07/stuff/main/AntiAfk.Lua'))()
-    loadstring(game:HttpGet('https://raw.githubusercontent.com/ethz07/stuff/main/Optimization.Lua'))()
 end
 
 local function loadHostScript()
