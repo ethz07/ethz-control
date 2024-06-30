@@ -58,31 +58,31 @@ local function startDroppingCash()
 end
 
 local function stopDroppingCash()
-    loadstring(game:HttpGet('https://raw.githubusercontent.com/ethz07/stuff/main/cmd/drop'))()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/ethz07/stuff/main/cmd/stop'))()
 end
 
 local function airlock()
-  loadstring(game:HttpGet('https://raw.githubusercontent.com/ethz07/stuff/main/cmd/drop'))()
+  loadstring(game:HttpGet('https://raw.githubusercontent.com/ethz07/stuff/main/cmd/airlock'))()
 end
 
 local function resetAlts()
-    loadstring(game:HttpGet('https://raw.githubusercontent.com/ethz07/stuff/main/cmd/drop'))()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/ethz07/stuff/main/cmd/reset'))()
 end
 
 local function showWallets()
-   loadstring(game:HttpGet('https://raw.githubusercontent.com/ethz07/stuff/main/cmd/drop'))()
+   loadstring(game:HttpGet('https://raw.githubusercontent.com/ethz07/stuff/main/cmd/wallet'))()
 end 
 
 local function redeemPromoCode(code)
-    loadstring(game:HttpGet('https://raw.githubusercontent.com/ethz07/stuff/main/cmd/drop'))()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/ethz07/stuff/main/cmd/redeem'))()
 end
 
 local function unWallet()
-    loadstring(game:HttpGet('https://raw.githubusercontent.com/ethz07/stuff/main/cmd/drop'))()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/ethz07/stuff/main/cmd/unwallet'))()
 end
 
 local function bringPlr(Target, POS)
-    loadstring(game:HttpGet('https://raw.githubusercontent.com/ethz07/stuff/main/cmd/drop'))()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/ethz07/stuff/main/cmd/bringplr'))()
 end
 
 local function onChatMessage(player, message)
