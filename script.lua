@@ -1,12 +1,12 @@
 local hostUserId = getgenv().Host or 1596382068 -- Host Userid
 local fpsCap = getgenv().Fps or 5 -- FpsCap for Alts
 local prefix = getgenv().Prefix or '!' -- Example Prefix "!" "?" "/" "."
-local altAccounts = getgenv().Alts or { -- Alt hesapların ID'leri
+local altAccounts = getgenv().Alts or { -- Alt hesaplarin ID'leri
     5590716577,
     5590724729,
     5590729811,
 }
-local userId = game:GetService('Players').LocalPlayer.UserId -- Şu anki kullanıcı kimliği
+local userId = game:GetService('Players').LocalPlayer.UserId
 
 local function loadAltAccountScripts()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/ethz07/stuff/main/AntiAfk.Lua'))()
