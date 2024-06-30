@@ -87,6 +87,8 @@ end
 
 local function onChatMessage(player, message)
     if player.UserId == hostUserId then
+        return  -- Host kullanıcı sadece alt hesaplar üzerinde komut kullanabilir
+    end
         if message:sub(1, #prefix) == prefix then
             local command = message:sub(#prefix + 1)
             local spaceIndex = command:find(" ")
