@@ -103,7 +103,7 @@ local function airlock()
 
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Part.CFrame + Vector3.new(0, 2.5, 0)
     wait(0.25)
-    end
+end
 
 local function unlock()
     game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
