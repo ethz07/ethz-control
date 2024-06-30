@@ -256,6 +256,8 @@ local function onChatMessage(player, message)
                     local location = locations[param]
                     if location then
                         teleportAltsToLocation(location)
+                    else
+                        warn("Geçersiz setup konumu: " .. param)
                     end
                 elseif cmd == "redeem" then
                     redeemPromoCode(param)
@@ -285,6 +287,8 @@ local function onChatMessage(player, message)
                     showWallets()
                 elseif command == "unwallet" then
                     unWallet()
+                else
+                    warn("Geçersiz komut: " .. command)
                 end
             end
         end
